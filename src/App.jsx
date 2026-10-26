@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const USERNAME = 'mihirhbhatt'
+const LINKEDIN_URL = 'https://www.linkedin.com/in/mihirhbhatt/'
 const IS_MAC = typeof navigator !== 'undefined' && /mac|iphone|ipad/i.test(navigator.userAgent)
 const MOD_LABEL = IS_MAC ? 'Cmd' : 'Ctrl'
 const CV_URL = `${import.meta.env.BASE_URL}Mihir_Bhatt_CV.docx`
@@ -106,8 +107,8 @@ function getAgentResponse(question) {
   }
   if (/\b(contact|email|reach|connect|touch|website|location|where|toronto)\b/.test(query)) {
     return {
-      text: 'Mihir is based in Toronto. You’re already on his portfolio website. To connect, visit his GitHub profile.',
-      link: { label: 'Connect on GitHub', href: `https://github.com/${USERNAME}` },
+      text: 'Mihir is based in Toronto. You’re already on his portfolio website. To connect, find him on LinkedIn or GitHub.',
+      link: { label: 'Connect on LinkedIn', href: LINKEDIN_URL },
     }
   }
   if (/\b(who|about|mihir|bio|background)\b/.test(query)) {
@@ -195,8 +196,8 @@ function AskAgent() {
     {open && <section className="agent-panel" role="dialog" aria-label="Ask Mihir's portfolio agent">
       <div className="agent-header">
         <span className="agent-avatar"><Icon name="bot" /></span>
-        <div><b>Ask Agent</b><small><span className="status-dot" /> Portfolio assistant</small></div>
-        <button className="agent-close" type="button" onClick={() => setOpen(false)} aria-label="Close Ask Agent">×</button>
+        <div><b>Ask Mihir</b><small><span className="status-dot" /> Portfolio assistant</small></div>
+        <button className="agent-close" type="button" onClick={() => setOpen(false)} aria-label="Close Ask Mihir">×</button>
       </div>
       <div className="agent-messages" ref={messagesRef} aria-live="polite">
         <div className="agent-message agent-reply">Hi! I can answer questions about Mihir’s background, projects, and skills using information from this portfolio.</div>
@@ -213,8 +214,8 @@ function AskAgent() {
       </form>
       <p className="agent-disclaimer">Answers are based on this portfolio, not a live AI service.</p>
     </section>}
-    <button className="agent-launcher" type="button" aria-expanded={open} aria-label={open ? 'Close Ask Agent' : 'Open Ask Agent'} onClick={() => setOpen(value => !value)}>
-      <Icon name={open ? 'code' : 'bot'} /><span>{open ? 'Close' : 'Ask Agent'}</span>
+    <button className="agent-launcher" type="button" aria-expanded={open} aria-label={open ? 'Close Ask Mihir' : 'Open Ask Mihir'} onClick={() => setOpen(value => !value)}>
+      <Icon name={open ? 'code' : 'bot'} /><span>{open ? 'Close' : 'Ask Mihir'}</span>
     </button>
   </div>
 }
@@ -503,7 +504,7 @@ function App() {
         <div className="skills-grid">{skills.map((skill, i) => <article className="skill-card" key={skill.group}><div className="skill-index mono">0{i + 1}</div><h3>{skill.group}</h3><div className="skill-tags">{skill.items.map(item => <span key={item}>{item}</span>)}</div></article>)}</div>
       </section>
 
-      <section className="contact-section" id="contact"><div className="section-wrap contact-inner"><p className="eyebrow">LET'S CONNECT</p><h2>Good ideas start<br /><span>with a conversation.</span></h2><p>Interested in automation, cloud, DevSecOps, or building something together? Connect with me on GitHub or explore my projects here.</p><div className="hero-actions"><a className="button button-primary" href={`https://github.com/${USERNAME}`} target="_blank" rel="noreferrer"><Icon name="github" /> Connect on GitHub <Icon name="arrow" /></a><a className="button button-quiet" href="#work">Explore projects <Icon name="arrow" /></a></div></div></section>
+      <section className="contact-section" id="contact"><div className="section-wrap contact-inner"><p className="eyebrow">LET'S CONNECT</p><h2>Good ideas start<br /><span>with a conversation.</span></h2><p>Interested in automation, cloud, DevSecOps, or building something together? Connect with me on LinkedIn or GitHub, or explore my projects here.</p><div className="hero-actions"><a className="button button-primary" href={LINKEDIN_URL} target="_blank" rel="noreferrer">Connect on LinkedIn <Icon name="arrow" /></a><a className="button button-quiet" href={`https://github.com/${USERNAME}`} target="_blank" rel="noreferrer"><Icon name="github" /> GitHub <Icon name="arrow" /></a><a className="button button-quiet" href="#work">Explore projects <Icon name="arrow" /></a></div></div></section>
     </main>
 
     <footer className="site-footer"><div className="section-wrap footer-inner"><a className="brand" href="#home"><span className="brand-mark">MB</span><span>mihir<span className="brand-dot">.</span></span></a><span className="footer-copy">A personal portfolio built with curiosity and care.</span><div className="footer-links"><a href={`https://github.com/${USERNAME}`} target="_blank" rel="noreferrer">GitHub <Icon name="arrow" /></a><a href="#home">Back to top ↑</a></div></div><div className="section-wrap footer-bottom"><span>© {new Date().getFullYear()} Mihir Bhatt · Toronto, Canada</span><span className="mono">BUILT WITH REACT + VITE</span></div></footer>
