@@ -146,3 +146,5 @@ html[data-theme="light"] .button-quiet:hover{background:#e6eefb;border-color:var
 html[data-theme="light"] .filter-box select{background:#fff;color:#24354c}
 html[data-theme="light"] .filter-box select option{background:#fff;color:#24354c}
 .filter-box select option{background:#0b1120;color:#dce5f7}
+.contact-embed{max-width:640px;margin:34px auto 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.contact-embed iframe{display:block;width:100%;height:760px;border:0}
