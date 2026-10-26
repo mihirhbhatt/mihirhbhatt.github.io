@@ -46,6 +46,13 @@ const featuredAreas = [
   },
 ]
 
+const starProjects = [
+  { title: 'GRC Engineering Lab', tag: 'GRC · ENGINEERING', repo: 'GRC-ENG-LAB', description: 'A hands-on lab for GRC engineering: making governance, risk, and compliance work repeatable and automated.', tech: ['TypeScript', 'GRC', 'Automation'] },
+  { title: 'AI Governance', tag: 'AI GOVERNANCE', repo: 'AiGovernance', description: 'Practical approaches to AI governance, risk, and responsible AI.', tech: ['Python', 'AI governance', 'AI risk'] },
+  { title: 'AI Security Projects', tag: 'AI SECURITY', repo: 'Ai-Security-Projects', description: 'A collection of projects exploring how to secure AI systems and workflows.', tech: ['Python', 'AI security'] },
+  { title: 'LLM Jailbreak Lab', tag: 'AI SECURITY · RED TEAMING', repo: 'llm_jailbreak_lab', description: 'A lab for studying LLM jailbreak techniques and testing model defenses.', tech: ['Python', 'LLM security', 'Red teaming'] },
+]
+
 const agentSuggestions = ['What does Mihir work on?', 'Show me featured projects', 'How can I get in touch?']
 
 function getAgentResponse(question) {
@@ -480,6 +487,7 @@ function App() {
 
       <section className="section-wrap section-block" id="work">
         <SectionHeading eyebrow="SELECTED PROJECTS" title="A few things from my GitHub." note="A selection of public projects across DevOps, compliance, and AI security." />
+        <div className="star-grid">{starProjects.map(item => <article className="featured-card star-card" key={item.repo}><div className="featured-top"><span className="star-badge"><Icon name="star" /> Star project</span><span className="featured-symbol"><Icon name="shield" /></span></div><p className="eyebrow">{item.tag}</p><h3>{item.title}</h3><p className="featured-description">{item.description}</p><div className="topic-list">{item.tech.map(tech => <span key={tech}>{tech}</span>)}</div><a className="text-link" href={`https://github.com/${USERNAME}/${item.repo}`} target="_blank" rel="noreferrer">Explore on GitHub <Icon name="arrow" /></a></article>)}</div>
         <div className="featured-grid">{featuredAreas.map(item => <article className="featured-card" key={item.number}><div className="featured-top"><span className="mono">{item.number} / 03</span><span className="featured-symbol"><Icon name={item.number === '01' ? 'shield' : item.number === '02' ? 'terminal' : 'cloud'} /></span></div><p className="eyebrow">{item.tag}</p><h3>{item.title}</h3><p className="featured-description">{item.description}</p><div className="topic-list">{item.tech.map(tech => <span key={tech}>{tech}</span>)}</div><a className="text-link" href={item.href} target="_blank" rel="noreferrer">{item.cta} <Icon name="arrow" /></a></article>)}</div>
       </section>
 

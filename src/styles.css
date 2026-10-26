@@ -146,3 +146,10 @@ html[data-theme="light"] .button-quiet:hover{background:#e6eefb;border-color:var
 html[data-theme="light"] .filter-box select{background:#fff;color:#24354c}
 html[data-theme="light"] .filter-box select option{background:#fff;color:#24354c}
 .filter-box select option{background:#0b1120;color:#dce5f7}
+.star-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px}
+.star-card{min-height:300px;border-color:rgba(255,200,87,.45)}
+.star-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:rgba(255,200,87,.14);color:#ffc857;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.star-badge svg{width:13px;height:13px;fill:currentColor}
+html[data-theme="light"] .star-badge{background:rgba(196,138,0,.12);color:#9a6a00}
+html[data-theme="light"] .star-card{border-color:rgba(196,138,0,.5)}
+@media(max-width:680px){.star-grid{grid-template-columns:1fr}}
