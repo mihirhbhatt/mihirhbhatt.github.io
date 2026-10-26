@@ -137,3 +137,12 @@ kbd{font:9px var(--mono);border:1px solid var(--line);border-radius:4px;padding:
 .cv-link{display:inline-flex;align-items:center;gap:7px;margin-left:18px;padding:5px 11px;border:1px solid var(--accent);border-radius:6px;color:var(--accent);font:600 10px var(--mono);letter-spacing:.08em}.cv-link:hover{background:var(--accent);color:var(--bg)}.cv-link svg{width:13px;height:13px}
 .cv-link+.palette-trigger{margin-left:10px}
 @media(max-width:680px){.cv-link{margin-left:8px;padding:6px 9px}}
+.featured-card,.repo-card,.skill-card,.button-quiet{transition:transform .25s ease,border-color .25s ease,background-color .25s ease,box-shadow .25s ease}
+.featured-card:hover,.repo-card:hover,.skill-card:hover{background:linear-gradient(135deg,rgba(155,188,255,.16),rgba(123,224,208,.12)),var(--panel);border-color:var(--accent);box-shadow:0 14px 40px rgba(155,188,255,.14)}
+.skill-card:hover{transform:translateY(-4px)}
+.button-quiet:hover{background:rgba(155,188,255,.14);border-color:var(--accent)}
+html[data-theme="light"] .featured-card:hover,html[data-theme="light"] .repo-card:hover,html[data-theme="light"] .skill-card:hover{background:linear-gradient(135deg,rgba(54,93,157,.1),rgba(24,123,112,.08)),#fff;border-color:var(--accent);box-shadow:0 14px 40px rgba(54,93,157,.16)}
+html[data-theme="light"] .button-quiet:hover{background:#e6eefb;border-color:var(--accent)}
+html[data-theme="light"] .filter-box select{background:#fff;color:#24354c}
+html[data-theme="light"] .filter-box select option{background:#fff;color:#24354c}
+.filter-box select option{background:#0b1120;color:#dce5f7}
