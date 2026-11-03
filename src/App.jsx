@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 const USERNAME = 'mihirhbhatt'
 const LINKEDIN_URL = 'https://www.linkedin.com/in/mihirhbhatt/'
@@ -6,6 +6,11 @@ const IS_MAC = typeof navigator !== 'undefined' && /mac|iphone|ipad/i.test(navig
 const MOD_LABEL = IS_MAC ? 'Cmd' : 'Ctrl'
 const CV_URL = `${import.meta.env.BASE_URL}Mihir_Bhatt_CV.docx`
 const REPO_ENDPOINT = `https://api.github.com/users/${USERNAME}/repos?type=owner&sort=updated&direction=desc&per_page=100`
+
+function getLocalTimeTheme(date = new Date()) {
+  const hour = date.getHours()
+  return hour >= 7 && hour < 19 ? 'light' : 'dark'
+}
 
 const skills = [
   { group: 'GRC', items: ['Governance, risk & compliance', 'PCI DSS', 'Compliance workflows'] },
@@ -227,7 +232,7 @@ function AskAgent() {
   </div>
 }
 
-function CommandPalette({ open, onClose, theme, toggleTheme, repos }) {
+function CommandPalette({ open, onClose, repos }) {
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
   const [output, setOutput] = useState(null)
@@ -245,13 +250,12 @@ function CommandPalette({ open, onClose, theme, toggleTheme, repos }) {
       { id: 'contact', label: 'Go to Contact', hint: 'goto contact', run: go('#contact') },
       { id: 'cv', label: 'Download CV', hint: 'download cv', run: () => { const a = document.createElement('a'); a.href = CV_URL; a.download = 'Mihir_Bhatt_CV.docx'; a.click(); return null } },
       { id: 'github', label: 'Open GitHub profile', hint: 'open github', run: open(`https://github.com/${USERNAME}`) },
-      { id: 'theme', label: `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`, hint: 'theme', run: () => { toggleTheme(); return null } },
       { id: 'whoami', label: 'whoami', hint: 'print bio', stay: true, run: () => ['Mihir Bhatt — automation engineer & Cloud/DevOps enthusiast', 'Toronto · GRC · DevSecOps · IaC · AI Governance & Security'] },
       { id: 'skills-list', label: 'skills', hint: 'list expertise', stay: true, run: () => skills.map(s => `${s.group.padEnd(24)} ${s.items.join(', ')}`) },
       { id: 'repos-list', label: 'ls repos', hint: 'list repositories', stay: true, run: () => repos.length ? repos.slice(0, 10).map(r => `${r.name}${r.language ? ` [${r.language}]` : ''}`) : ['No repositories loaded yet.'] },
-      { id: 'help', label: 'help', hint: 'show commands', stay: true, run: () => ['Type to filter, ↑↓ to move, Enter to run, Esc to close.', 'Commands: goto <section>, open github, theme, whoami, skills, ls repos'] },
+      { id: 'help', label: 'help', hint: 'show commands', stay: true, run: () => ['Type to filter, ↑↓ to move, Enter to run, Esc to close.', 'Commands: goto <section>, open github, whoami, skills, ls repos'] },
     ]
-  }, [theme, toggleTheme, repos])
+  }, [repos])
 
   const results = useMemo(() => {
     const term = query.trim().toLowerCase()
@@ -349,7 +353,7 @@ function StatusBadge({ loading, error, repos }) {
 }
 
 function App() {
-  const [theme, setTheme] = useState(() => window.localStorage.getItem('portfolio-theme') === 'light' ? 'light' : 'dark')
+  const [theme, setTheme] = useState(() => getLocalTimeTheme())
   const [repos, setRepos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -357,8 +361,6 @@ function App() {
   const [language, setLanguage] = useState('All')
   const [mobileOpen, setMobileOpen] = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
-  const toggleTheme = useCallback(() => setTheme(current => current === 'dark' ? 'light' : 'dark'), [])
-
   useEffect(() => {
     const onKey = event => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); setPaletteOpen(open => !open) }
@@ -368,9 +370,43 @@ function App() {
   }, [])
 
   useEffect(() => {
+    let timeoutId
+
+    function scheduleNextChange() {
+      const now = new Date()
+      const next = new Date(now)
+      if (now.getHours() < 7) next.setHours(7, 0, 0, 0)
+      else if (now.getHours() < 19) next.setHours(19, 0, 0, 0)
+      else {
+        next.setDate(next.getDate() + 1)
+        next.setHours(7, 0, 0, 0)
+      }
+      timeoutId = window.setTimeout(updateTheme, next.getTime() - now.getTime())
+    }
+
+    function updateTheme() {
+      setTheme(getLocalTimeTheme())
+      scheduleNextChange()
+    }
+
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'visible') {
+        window.clearTimeout(timeoutId)
+        updateTheme()
+      }
+    }
+
+    scheduleNextChange()
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      window.clearTimeout(timeoutId)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [])
+
+  useLayoutEffect(() => {
     document.documentElement.dataset.theme = theme
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'light' ? '#f7f9fc' : '#090d19')
-    window.localStorage.setItem('portfolio-theme', theme)
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'light' ? '#f4f6f2' : '#090c0b')
   }, [theme])
 
   useEffect(() => {
@@ -415,16 +451,13 @@ function App() {
     <header className="site-header">
       <a className="brand" href="#home" onClick={closeMenu} aria-label="Mihir Bhatt home"><span className="brand-mark">MB</span><span>mihir<span className="brand-dot">.</span></span></a>
       <StatusBadge loading={loading} error={error} repos={repos} />
-      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} theme={theme} toggleTheme={toggleTheme} repos={repos} />
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} repos={repos} />
       <button className="mobile-menu" aria-label="Toggle navigation" aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}><Icon name="menu" /></button>
       <nav className={mobileOpen ? 'nav-links open' : 'nav-links'} aria-label="Main navigation">
         <a href="#about" onClick={closeMenu}>About</a>
         <a href="#work" onClick={closeMenu}>Selected work</a>
         <a href="#repositories" onClick={closeMenu}>Repositories</a>
         <a href="#skills" onClick={closeMenu}>Expertise</a>
-        <button className="theme-toggle" type="button" onClick={() => setTheme(current => current === 'dark' ? 'light' : 'dark')} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
-          <Icon name={theme === 'dark' ? 'sun' : 'moon'} /><span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
-        </button>
         <a className="nav-contact" href="#contact" onClick={closeMenu}>Let's connect <Icon name="arrow" /></a>
       </nav>
       <a className="cv-link" href={CV_URL} download="Mihir_Bhatt_CV.docx" aria-label="Download CV"><Icon name="download" /><span>CV</span></a>
@@ -433,31 +466,27 @@ function App() {
 
     <main>
       <section className="hero section-wrap" id="home">
+        <div className="hero-meta mono"><span>PORTFOLIO / NO. 001</span><span>TORONTO, CANADA</span></div>
+        <div className="hero-visual" aria-hidden="true">
+          <div className="visual-grid" />
+          <div className="orbit orbit-a" /><div className="orbit orbit-b" />
+          <div className="hero-planet"><span /></div>
+          <div className="orbit-point" />
+          <div className="visual-caption"><span className="status-dot" /> CLOUD SYSTEMS / AUTOMATION</div>
+        </div>
+        <div className="hero-title">
+          <h1>Mihir<br /><span>Bhatt</span></h1>
+        </div>
         <div className="hero-copy">
-          <div className="availability"><span className="status-dot" /> GRC · DEVSECOPS · IAC · AI GOVERNANCE & SECURITY</div>
-          <h1>Cloud systems,<br /><span>automated with care.</span></h1>
-          <p className="hero-lede">I'm Mihir Bhatt, an automation engineer and Cloud & DevOps enthusiast based in Toronto. I enjoy turning complex engineering challenges into practical, repeatable workflows.</p>
+          <div className="availability"><span className="status-dot" /> AUTOMATION ENGINEER · CLOUD & DEVOPS</div>
+          <p className="hero-lede">Building practical, repeatable workflows across cloud, DevOps, security, and compliance.</p>
           <div className="hero-actions">
             <a className="button button-primary" href="#repositories">Explore my work <Icon name="arrow" /></a>
             <a className="button button-quiet" href={`https://github.com/${USERNAME}`} target="_blank" rel="noreferrer"><Icon name="github" /> GitHub profile</a>
           </div>
-          <div className="hero-footnote"><span className="mono">AREAS / 06</span><span>GRC · DevSecOps · IaC · AI · AI Governance · AI Security</span></div>
+          <div className="hero-footnote"><span className="mono">FOCUS / 06</span><span>GRC · DevSecOps · IaC · AI · AI Governance · AI Security</span></div>
         </div>
-        <div className="hero-visual" aria-label="Abstract cloud security architecture illustration">
-          <div className="visual-grid" />
-          <div className="orbit orbit-a" /><div className="orbit orbit-b" />
-          <div className="visual-center"><img className="profile-photo" src="https://github.com/mihirhbhatt.png?size=240" alt="Mihir Bhatt's GitHub profile photo" /><span>MIHIR BHATT</span></div>
-          {[
-            ['shield', 'AI Security', 'Artifact & RAG scanning'],
-            ['cloud', 'GRC', 'Risk · Compliance'],
-            ['code', 'DevSecOps', 'CI/CD security'],
-            ['terminal', 'IaC', 'Terraform · Ansible'],
-            ['bot', 'AI', 'AI-assisted workflows'],
-            ['star', 'AI Governance', 'Responsible AI'],
-          ].map(([icon, title, sub], i) => <div className={`float-card pos-${i + 1}`} key={title}><span className="float-icon"><Icon name={icon} /></span><div><b>{title}</b><small>{sub}</small></div></div>)}
-          <div className="visual-caption"><span className="status-dot" /> CLOUD SYSTEMS / AUTOMATION</div>
-        </div>
-        <div className="hero-scroll"><span /> SCROLL TO EXPLORE</div>
+        <a className="hero-scroll" href="#about"><span /> SCROLL TO EXPLORE</a>
       </section>
 
       <section className="intro-strip">

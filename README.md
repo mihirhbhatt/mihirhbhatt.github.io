@@ -4,9 +4,9 @@ A responsive personal portfolio built with React and Vite. The repositories sect
 
 ## Features
 
-- Original dark engineering-inspired design
+- Editorial portfolio design with a cinematic orbital hero illustration
 - Responsive navigation and layout
-- Persistent dark and light themes
+- Automatic local-time theme: light from 7 AM to 7 PM, dark overnight
 - Live public GitHub repository list
 - Repository search and programming-language filter
 - Loading, error, and empty states
