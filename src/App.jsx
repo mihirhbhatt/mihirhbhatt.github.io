@@ -484,7 +484,12 @@ function App() {
             <a className="button button-primary" href="#repositories">Explore my work <Icon name="arrow" /></a>
             <a className="button button-quiet" href={`https://github.com/${USERNAME}`} target="_blank" rel="noreferrer"><Icon name="github" /> GitHub profile</a>
           </div>
-          <div className="hero-footnote"><span className="mono">FOCUS / 06</span><span>GRC · DevSecOps · IaC · AI · AI Governance · AI Security</span></div>
+          <div className="hero-footnote">
+            <span className="mono">FOCUS / 06</span>
+            <span className="focus-tags">
+              {['GRC', 'DevSecOps', 'IaC', 'AI', 'AI Governance', 'AI Security'].map(tag => <span key={tag}>{tag}</span>)}
+            </span>
+          </div>
         </div>
         <a className="hero-scroll" href="#about"><span /> SCROLL TO EXPLORE</a>
       </section>
