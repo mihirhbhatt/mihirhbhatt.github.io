@@ -478,7 +478,7 @@ function App() {
           <h1>Mihir<br /><span>Bhatt</span></h1>
         </div>
         <div className="hero-copy">
-          <div className="availability"><span className="status-dot" /> AUTOMATION ENGINEER · CLOUD & DEVOPS</div>
+          <div className="availability"><span className="status-dot" /> AUTOMATION & CLOUD ENGINEER · DEVSECOPS · AI SECURITY & GRC</div>
           <p className="hero-lede">Building practical, repeatable workflows across cloud, DevOps, security, and compliance.</p>
           <div className="hero-actions">
             <a className="button button-primary" href="#repositories">Explore my work <Icon name="arrow" /></a>
