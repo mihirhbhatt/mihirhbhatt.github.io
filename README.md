@@ -55,7 +55,18 @@ npm run preview
 
 4. On GitHub, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
 5. Open the **Actions** tab and watch **Deploy portfolio to GitHub Pages** complete.
-6. The expected website URL is `https://mihirhbhatt.github.io/`.
+6. The site is configured to use `https://mihirhbhatt.com/`. The `public/CNAME` file is copied into the GitHub Pages deployment artifact by Vite.
+7. At your domain's DNS provider, point the apex domain `mihirhbhatt.com` to GitHub Pages by adding these four `A` records:
+
+   ```text
+   185.199.108.153
+   185.199.109.153
+   185.199.110.153
+   185.199.111.153
+   ```
+
+   Optionally, add GitHub's [recommended IPv6 `AAAA` records](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-an-apex-domain). To also support `www.mihirhbhatt.com`, add a `CNAME` record for `www` pointing to `mihirhbhatt.github.io`.
+8. In **Settings → Pages**, set the custom domain to `mihirhbhatt.com`. Once DNS has propagated and GitHub verifies the domain, enable **Enforce HTTPS**.
 
 This is a user-site repository, so `vite.config.js` uses `base: '/'`. If you instead publish under a project repository URL such as `https://mihirhbhatt.github.io/portfolio/`, update `base` to `'/portfolio/'`.
 
